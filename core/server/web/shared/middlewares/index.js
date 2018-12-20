@@ -81,5 +81,9 @@ module.exports = {
 
     get emitEvents() {
         return require('./emit-events');
+    },
+
+    get uploadCleanup() {
+        return require('./upload-cleanup');
     }
 };

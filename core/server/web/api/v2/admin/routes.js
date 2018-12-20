@@ -183,7 +183,8 @@ module.exports = function apiRoutes() {
         upload.single('uploadimage'),
         shared.middlewares.validation.upload({type: 'images'}),
         shared.middlewares.image.normalize,
-        apiv2.http(apiv2.upload.image)
+        apiv2.http(apiv2.upload.image),
+        shared.middlewares.uploadCleanup
     );
 
     router.post('/uploads/profile-image',
@@ -192,7 +193,8 @@ module.exports = function apiRoutes() {
         shared.middlewares.validation.upload({type: 'images'}),
         shared.middlewares.validation.profileImage,
         shared.middlewares.image.normalize,
-        apiv2.http(apiv2.upload.image)
+        apiv2.http(apiv2.upload.image),
+        shared.middlewares.uploadCleanup
     );
 
     router.post('/db/backup', mw.authenticateClient('Ghost Backup'), api.http(api.db.backupContent));
@@ -202,7 +204,8 @@ module.exports = function apiRoutes() {
         upload.single('uploadimage'),
         shared.middlewares.validation.upload({type: 'icons'}),
         shared.middlewares.validation.blogIcon(),
-        apiv2.http(apiv2.upload.image)
+        apiv2.http(apiv2.upload.image),
+        shared.middlewares.uploadCleanup
     );
 
     // ## Invites
