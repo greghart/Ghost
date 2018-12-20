@@ -1,13 +1,20 @@
 // ### Navigation Helper
-// `{{navigation}}`
-// Outputs navigation menu of static urls
-
+// `{{navigation}}` OR `{{#navigation}}{{/navigation}}
+//
+// Can be used as either an output or a block helper
+//
+// Output helper: `{{navigation}}`
+// Returnsnavigation menu of static urls
+//
+// Block helper: `{{#navigation}}{{/navigation}}`
+// This is the default handlebars behaviour of dropping into the navigation array scope
 var proxy = require('./proxy'),
     string = require('../lib/security/string'),
     _ = require('lodash'),
     SafeString = proxy.SafeString,
     i18n = proxy.i18n,
     errors = proxy.errors,
+    handlebars = proxy.hbs.handlebars,
     templates = proxy.templates;
 
 module.exports = function navigation(options) {
@@ -73,6 +80,9 @@ module.exports = function navigation(options) {
 
     data = _.merge({}, {navigation: output});
 
+    if (options.fn) {
+        return handlebars.helpers.with.call(this, output, options);
+    }
     return templates.execute('navigation', data, options);
 };
 
