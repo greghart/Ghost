@@ -45,6 +45,15 @@ exports.makePathsAbsolute = function makePathsAbsolute(obj, parent) {
 };
 
 /**
+ * Get the path to some adapter, currently held in content
+ */
+exports.getAdapterPath = function getAdapterPath(adapterKey) {
+    return path.join(
+        this.get('paths:contentPath'), 'adapters', adapterKey, '/'
+    );
+}
+
+/**
  * we can later support setting folder names via custom config values
  */
 exports.getContentPath = function getContentPath(type) {
@@ -55,16 +64,16 @@ exports.getContentPath = function getContentPath(type) {
         return path.join(this.get('paths:contentPath'), 'apps/');
     case 'themes':
         return path.join(this.get('paths:contentPath'), 'themes/');
-    case 'storage':
-        return path.join(this.get('paths:contentPath'), 'adapters', 'storage/');
-    case 'scheduling':
-        return path.join(this.get('paths:contentPath'), 'adapters', 'scheduling/');
     case 'logs':
         return path.join(this.get('paths:contentPath'), 'logs/');
     case 'data':
         return path.join(this.get('paths:contentPath'), 'data/');
     case 'settings':
         return path.join(this.get('paths:contentPath'), 'settings/');
+    // Backwards support for explicit adapters
+    case 'storage':
+    case 'scheduling':
+        return this.getAdapterPath(type);
     default:
         throw new Error('getContentPath was called with: ' + type);
     }

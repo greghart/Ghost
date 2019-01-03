@@ -43,6 +43,7 @@ _private.loadNconf = function loadNconf(options) {
     nconf.makePathsAbsolute = localUtils.makePathsAbsolute.bind(nconf);
     nconf.isPrivacyDisabled = localUtils.isPrivacyDisabled.bind(nconf);
     nconf.getContentPath = localUtils.getContentPath.bind(nconf);
+    nconf.getAdapterPath = localUtils.getAdapterPath.bind(nconf);
     nconf.sanitizeDatabaseProperties = localUtils.sanitizeDatabaseProperties.bind(nconf);
     nconf.doesContentPathExist = localUtils.doesContentPathExist.bind(nconf);
 
