@@ -43,10 +43,7 @@ function initialiseServices() {
         apps.init(),
         scheduling.init({
             schedulerUrl: config.get('scheduling').schedulerUrl,
-            active: config.get('scheduling').active,
             apiUrl: urlService.utils.urlFor('api', {version: 'deprecated', versionType: 'content'}, true),
-            internalPath: config.get('paths').internalSchedulingPath,
-            contentPath: config.getContentPath('scheduling')
         })
     ).then(function () {
         debug('XMLRPC, Slack, Webhooks, Apps, Scheduling, Permissions done');

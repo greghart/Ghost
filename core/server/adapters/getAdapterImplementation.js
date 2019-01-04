@@ -29,6 +29,15 @@ function getAdapterImplementation(adapter) {
         return cache[choice];
     }
 
+    // CASE: active adapter is a npm module
+    try {
+        AdapterImplementationClass = require(choice);
+    } catch (err) {
+        if (err.code !== 'MODULE_NOT_FOUND') {
+            throw new common.errors.IncorrectUsageError({err});
+        }
+    }
+
     // CASE: load adapter from content (.../content/storage)
     const implementationPath = `${config.getAdapterPath(adapter.getKey())}${choice}`;
     try {
@@ -77,7 +86,10 @@ function getAdapterImplementation(adapter) {
     adapterImplementation = new AdapterImplementationClass(adapterConfig);
 
     // CASE: if multiple adapter modules are installed, instanceof could return false
-    if (Object.getPrototypeOf(AdapterImplementationClass).name !== adapter.getBase().name) {
+    if (
+        !(adapterImplementation instanceof adapter.getBase()) &&
+        Object.getPrototypeOf(AdapterImplementationClass).name !== adapter.getBase().name
+    ) {
         throw new common.errors.IncorrectUsageError({
             message: `Your ${adapter.getKey()} adapter does not inherit from the Base interface.`
         });

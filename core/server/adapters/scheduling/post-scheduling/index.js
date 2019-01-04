@@ -1,9 +1,10 @@
 const Promise = require('bluebird'),
     moment = require('moment'),
-    localUtils = require('../utils'),
     common = require('../../../lib/common'),
     models = require('../../../models'),
     urlService = require('../../../services/url'),
+    getAdapterImplementation = require('../../getAdapterImplementation'),
+    SchedulingAdapter = require('../SchedulingAdapter')
     _private = {};
 
 _private.normalize = function normalize(options) {
@@ -31,23 +32,23 @@ _private.loadScheduledPosts = function () {
         });
 };
 
-exports.init = function init(options = {}) {
+exports.init = Promise.method(function init(options = {}) {
     const {apiUrl} = options;
     let adapter = null,
         client = null;
 
     if (!Object.keys(options).length) {
-        return Promise.reject(new common.errors.IncorrectUsageError({message: 'post-scheduling: no config was provided'}));
+        throw new common.errors.IncorrectUsageError({message: 'post-scheduling: no config was provided'});
     }
 
     if (!apiUrl) {
-        return Promise.reject(new common.errors.IncorrectUsageError({message: 'post-scheduling: no apiUrl was provided'}));
+        throw new common.errors.IncorrectUsageError({message: 'post-scheduling: no apiUrl was provided'});
     }
 
     return _private.loadClient()
         .then((_client) => {
             client = _client;
-            return localUtils.createAdapter(options);
+            return getAdapterImplementation(new SchedulingAdapter());
         })
         .then((_adapter) => {
             adapter = _adapter;
@@ -90,4 +91,4 @@ exports.init = function init(options = {}) {
                 adapter.unschedule(_private.normalize({object, apiUrl, client}));
             });
         });
-};
+});
