@@ -10,6 +10,7 @@
         "internalAppPath": "core/server/apps/",
         "internalStoragePath": "core/server/adapters/storage/",
         "internalSchedulingPath": "core/server/adapters/scheduling/",
+        "internalMailerPath": "core/server/adapters/mail/",
         "migrationPath": "core/server/data/migrations",
         "publicFilePath": "core/server/public"
     },

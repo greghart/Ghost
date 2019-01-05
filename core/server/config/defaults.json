@@ -19,6 +19,9 @@
     "scheduling": {
         "active": "SchedulingDefault"
     },
+    "mail": {
+        "active": "NodeMailerDefault"
+    },
     "logging": {
         "level": "info",
         "rotation": {

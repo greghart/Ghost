@@ -4,48 +4,22 @@ var should = require('should'),
     sandbox = sinon.sandbox.create();
 
 describe('Mail: Utils', function () {
-    var scope = {ghostMailer: null};
 
-    beforeEach(function () {
-        scope.ghostMailer = new mail.GhostMailer();
-
-        sandbox.stub(scope.ghostMailer.transport, 'sendMail').callsFake(function (message, sendMailDone) {
-            sendMailDone(null, {
-                statusHandler: {
-                    once: function (eventName, eventDone) {
-                        if (eventName === 'sent') {
-                            eventDone();
-                        }
-                    }
-                }
-            });
-        });
-    });
-
-    afterEach(function () {
-        sandbox.restore();
-    });
-
-    it('generate welcome', function (done) {
-        mail.utils.generateContent({
+    it('generate welcome', function () {
+        return mail.utils.generateContent({
             template: 'welcome',
             data: {
                 ownerEmail: 'test@example.com'
             }
-        }).then(function (result) {
-            return scope.ghostMailer.send({
-                to: 'test@example.com',
-                subject: 'lol',
-                html: result.html,
-                text: result.text
-            });
-        }).then(function () {
-            done();
-        }).catch(done);
+        })
+        .then(({ text, html }) => {
+            should.exist(text);
+            should.exist(html);
+        });
     });
 
-    it('generates newsletter template', function (done) {
-        mail.utils.generateContent({
+    it('generates newsletter template', function () {
+        return mail.utils.generateContent({
             template: 'newsletter',
             data: {
                 blog: {
@@ -103,15 +77,10 @@ describe('Mail: Utils', function () {
                     date: 'june, 9th 2016'
                 }
             }
-        }).then(function (result) {
-            return scope.ghostMailer.send({
-                to: 'jbloggs@example.com',
-                subject: 'The Newsletter Blog',
-                html: result.html,
-                text: result.text
-            });
-        }).then(function () {
-            done();
-        }).catch(done);
+        })
+        .then(({ text, html }) => {
+            should.exist(text);
+            should.exist(html);
+        });
     });
 });

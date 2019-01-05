@@ -3,7 +3,7 @@ const settingsCache = require('../settings/cache');
 const config = require('../../config');
 const MembersApi = require('../../lib/members');
 const models = require('../../models');
-const mail = require('../mail');
+const mailerAdapter = require('../../adapters/mail');
 
 function createMember({name, email, password}) {
     return models.Member.add({
@@ -64,12 +64,10 @@ const {protocol, host} = url.parse(config.get('url'));
 const siteOrigin = `${protocol}//${host}`;
 const issuer = siteOrigin;
 const ssoOrigin = siteOrigin;
-let mailer;
 
 function sendEmail(member, {token}) {
-    if (!(mailer instanceof mail.GhostMailer)) {
-        mailer = new mail.GhostMailer();
-    }
+    const mailer = mailerAdapter.getMailer();
+
     const message = {
         to: member.email,
         subject: 'Reset password',

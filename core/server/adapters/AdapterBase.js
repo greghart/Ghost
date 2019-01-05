@@ -6,6 +6,9 @@
  */
 class AdapterBase {
 
+    /**
+     * @returns a unique key for this adapter. Dictates path in config
+     */
     getKey() {
         throw new Error('AdapterBase.getKey -- must be defined');
     }
@@ -13,7 +16,7 @@ class AdapterBase {
     /**
      * support for an internal configurable path to adapter implementations
      *
-     * TODO What is the use case around configuring internal adapter paths?
+     * @todo What is the use case around configuring internal adapter paths?
      * @returns {string} A key in paths config, if any
      */
     getInternalPathKey() {
@@ -29,7 +32,7 @@ class AdapterBase {
         throw new Error('AdapterBase.getBase -- must be defined');
     }
 
-    // TODO Explicitly set the default implementation choice? Currently just enforced by default config.
+    // @todo Explicitly set the default implementation choice? Currently just enforced by default config.
 }
 
 module.exports = AdapterBase;

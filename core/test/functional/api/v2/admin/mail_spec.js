@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const testUtils = require('../../../../utils');
 const localUtils = require('./utils');
 const config = require('../../../../../../core/server/config');
-const mailService = require('../../../../../../core/server/services/mail');
+const NodeMailerDefault = require('../../../../../../core/server/adapters/mail/NodeMailerDefault');
 const ghost = testUtils.startGhost;
 const sandbox = sinon.sandbox.create();
 let request;
@@ -27,7 +27,7 @@ describe('Mail API V2', function () {
     });
 
     beforeEach(function () {
-        sandbox.stub(mailService.GhostMailer.prototype, 'send').resolves({message: 'sent'});
+        sandbox.stub(NodeMailerDefault.prototype, 'send').resolves({message: 'sent'});
     });
 
     afterEach(function () {
@@ -61,7 +61,7 @@ describe('Mail API V2', function () {
 
                 jsonResponse.mail[0].status.should.eql({message: 'sent'});
                 jsonResponse.mail[0].message.subject.should.eql('testemail');
-                mailService.GhostMailer.prototype.send.called.should.be.true();
+                NodeMailerDefault.prototype.send.called.should.be.true();
             });
     });
 
@@ -76,7 +76,7 @@ describe('Mail API V2', function () {
                 should.not.exist(res.headers['x-cache-invalidate']);
                 const jsonResponse = res.body;
                 jsonResponse.should.eql({message: 'sent'});
-                mailService.GhostMailer.prototype.send.called.should.be.true();
+                NodeMailerDefault.prototype.send.called.should.be.true();
             });
     });
 });

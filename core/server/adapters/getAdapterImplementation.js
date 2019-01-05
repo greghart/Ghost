@@ -1,5 +1,5 @@
 const _ = require('lodash'),
-    config = require('..//config'),
+    config = require('../config'),
     common = require('../lib/common'),
     AdapterBase = require('./AdapterBase'),
     cache = {};
@@ -65,18 +65,22 @@ function getAdapterImplementation(adapter) {
     }
 
     // CASE: check in the internal path, if it exists
+    const internalPath = `${config.get('paths')[adapter.getInternalPathKey()]}${choice}`;
     if (adapter.getInternalPathKey()) {
         try {
-            AdapterImplementationClass = AdapterImplementationClass || require(`${config.get('paths')[adapter.getInternalPathKey()]}${choice}`);
+            AdapterImplementationClass = (
+                AdapterImplementationClass ||
+                require(internalPath)
+            );
         } catch (err) {
             if (err.code === 'MODULE_NOT_FOUND') {
                 throw new common.errors.IncorrectUsageError({
                     err,
-                    context: `We cannot find your adapter in: ${config.getContentPath('storage')} or: ${config.get('paths').internalStoragePath}`
+                    context: `We cannot find your adapter in: ${implementationPath} or: ${internalPath}`
                 });
             } else {
                 throw new common.errors.IncorrectUsageError({
-                    message: 'We have detected an error in your custom storage adapter.',
+                    message: `We have detected an error in your custom ${adapter.getKey()} adapter.`,
                     err
                 });
             }

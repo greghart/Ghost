@@ -6,7 +6,6 @@ var should = require('should'),
     common = require('../../../../../server/lib/common'),
     models = require('../../../../../server/models'),
     api = require('../../../../../server/api'),
-    schedulingUtils = require('../../../../../server/adapters/scheduling/utils'),
     SchedulingDefault = require('../../../../../server/adapters/scheduling/SchedulingDefault'),
     postScheduling = require('../../../../../server/adapters/scheduling/post-scheduling'),
     urlService = require('../../../../../server/services/url'),
@@ -33,8 +32,6 @@ describe('Scheduling: Post Scheduling', function () {
             mobiledoc: testUtils.DataGenerator.markdownToMobiledoc('something')
         }));
 
-        scope.adapter = new SchedulingDefault();
-
         sandbox.stub(api.schedules, 'getScheduledPosts').callsFake(function () {
             return Promise.resolve({posts: scope.scheduledPosts});
         });
@@ -45,14 +42,13 @@ describe('Scheduling: Post Scheduling', function () {
             });
         });
 
-        sandbox.stub(schedulingUtils, 'createAdapter').returns(Promise.resolve(scope.adapter));
 
         sandbox.stub(models.Client, 'findOne').callsFake(function () {
             return Promise.resolve(scope.client);
         });
 
-        sandbox.spy(scope.adapter, 'schedule');
-        sandbox.spy(scope.adapter, 'reschedule');
+        sandbox.spy(SchedulingDefault.prototype, 'schedule');
+        sandbox.spy(SchedulingDefault.prototype, 'reschedule');
     });
 
     afterEach(function () {
@@ -67,9 +63,9 @@ describe('Scheduling: Post Scheduling', function () {
                     apiUrl: scope.apiUrl
                 }).then(function () {
                     scope.events['post.scheduled'](scope.post);
-                    scope.adapter.schedule.called.should.eql(true);
+                    SchedulingDefault.prototype.schedule.called.should.eql(true);
 
-                    scope.adapter.schedule.calledWith({
+                    SchedulingDefault.prototype.schedule.calledWith({
                         time: moment(scope.post.get('published_at')).valueOf(),
                         url: urlService.utils.urlJoin(scope.apiUrl, 'schedules', 'posts', scope.post.get('id')) + '?client_id=' + scope.client.get('slug') + '&client_secret=' + scope.client.get('secret'),
                         extra: {
@@ -91,7 +87,7 @@ describe('Scheduling: Post Scheduling', function () {
                 postScheduling.init({
                     apiUrl: scope.apiUrl
                 }).then(function () {
-                    scope.adapter.reschedule.calledTwice.should.eql(true);
+                    SchedulingDefault.prototype.reschedule.calledTwice.should.eql(true);
                     done();
                 }).catch(done);
             });

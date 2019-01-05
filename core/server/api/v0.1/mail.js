@@ -6,22 +6,19 @@ const Promise = require('bluebird'),
     localUtils = require('./utils'),
     models = require('../../models'),
     common = require('../../lib/common'),
-    mail = require('../../services/mail'),
+    mailerAdapter = require('../../adapters/mail'),
+    mailUtils = require('../../services/mail/utils')
     notificationsAPI = require('./notifications'),
     docName = 'mail';
-
-let mailer;
 
 /**
  * Send mail helper
  */
 function sendMail(object) {
-    if (!(mailer instanceof mail.GhostMailer)) {
-        mailer = new mail.GhostMailer();
-    }
+    const mailer = mailerAdapter.getMailer();
 
     return mailer.send(object.mail[0].message).catch((err) => {
-        if (mailer.state.usingDirect) {
+        if (mailer.isUsingDirect()) {
             notificationsAPI.add(
                 {
                     notifications: [{
@@ -116,7 +113,7 @@ const apiMail = {
          */
 
         function generateContent(result) {
-            return mail.utils.generateContent({template: 'test'}).then((content) => {
+            return mailUtils.generateContent({template: 'test'}).then((content) => {
                 const payload = {
                     mail: [{
                         message: {

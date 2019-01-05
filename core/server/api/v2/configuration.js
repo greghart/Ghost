@@ -1,5 +1,5 @@
 const Promise = require('bluebird');
-const {isPlainObject} = require('lodash');
+const { get } = require('lodash');
 const urlService = require('../../services/url');
 const models = require('../../models');
 const config = require('../../config');
@@ -17,7 +17,7 @@ function getAboutConfig() {
         version: ghostVersion.full,
         environment: config.get('env'),
         database: config.get('database').client,
-        mail: isPlainObject(config.get('mail')) ? config.get('mail').transport : ''
+        mail: get(config, 'mail.transport', '')
     };
 }
 

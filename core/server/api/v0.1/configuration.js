@@ -1,7 +1,7 @@
 // # Configuration API
 // RESTful API for browsing the configuration
 const Promise = require('bluebird'),
-    {isPlainObject} = require('lodash'),
+    { get } = require('lodash'),
     urlService = require('../../services/url'),
     models = require('../../models'),
     config = require('../../config'),
@@ -21,7 +21,7 @@ function getAboutConfig() {
         version: ghostVersion.full,
         environment: config.get('env'),
         database: config.get('database').client,
-        mail: isPlainObject(config.get('mail')) ? config.get('mail').transport : ''
+        mail: get(config, 'mail.transport', '')
     };
 }
 
