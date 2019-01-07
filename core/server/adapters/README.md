@@ -26,10 +26,10 @@ The primary requirements of an adapter are:
 1. Every adapter *must* be setup and configured properly for Ghost to function.
 2. Thus, every adapter *must* come with a built-in default implementation.
 3. Each adapter must have a unique key
-4. Each adapter implementation should have a unique key
-3. The active implementation for an adapter should be configurable, as well as 
+4. Each adapter implementation should have a unique key. This is currently filename or module.
+5. The active implementation for an adapter should be configurable, as well as 
     options for separate implementations side-by-side.
-4. Custom adapter implementations should just need to be code added in a specific 
+6. Custom adapter implementations should just need to be code added in a specific 
     location, or a custom installed package.
 
 example adapter configuration 
@@ -43,6 +43,3 @@ example adapter configuration
   }
 }
 ```
-
-TODO: Setup a basic interface for how adapters are setup to allow for a cleaner codebase
-and possible introspection in the future.

@@ -1,7 +1,10 @@
 
 class MailerBase {
 
-    constructor() {
+    /**
+     * @param {Object} options - Passed directly from config
+     */
+    constructor(options) {
         Object.defineProperty(this, 'requiredFns', {
             value: ['send', 'isUsingDirect'],
             writable: false

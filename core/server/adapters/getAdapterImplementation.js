@@ -5,7 +5,6 @@ const _ = require('lodash'),
     cache = {};
 
 /**
- * Dependencies are injected so adapters can be setup outside of codebase.
  * @param {AdapterBase} adapter
  * @returns {AdapterImplementation} The implementation that's configured for current setup
  */

@@ -1,7 +1,7 @@
 /**
  * The original default mailer implementation.
  *
- * Utilizes nodemailer .7 under the hood
+ * Utilizes nodemailer .7 under the hood.
  */
 var _ = require('lodash'),
     Promise = require('bluebird'),
@@ -26,6 +26,9 @@ class NodeMailerDefault extends MailerBase {
         this.state.usingDirect = transport === 'direct';
     }
 
+    /**
+     * @todo Should we make this base from logic available to all potential adapters?
+     */
     from() {
         var from = config.get('mail') && config.get('mail').from,
             defaultBlogTitle;
@@ -45,7 +48,6 @@ class NodeMailerDefault extends MailerBase {
         return from;
     }
 
-    // Moved it to its own module
     getDomain() {
         var domain = urlService.utils.urlFor('home', true).match(new RegExp('^https?://([^/:?#]+)(?:[/:?#]|$)', 'i'));
         return domain && domain[1];
